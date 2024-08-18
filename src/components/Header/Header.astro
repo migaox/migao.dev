@@ -1,0 +1,50 @@
+---
+import { MENU } from 'config'
+import ThemeToggle from '../Header/ThemeToggle.astro'
+import Logo from '../Header/Logo.astro'
+import NavMenu from '../Header/NavMenu.astro'
+import MenuToggle from '../Header/MenuToggle.astro'
+import Search from '@components/Header/Search.astro'
+---
+
+<header class="md:py-4 py-2 px-8">
+    <div class="flex items-center justify-between gap-4 h-16">
+        <div class="flex items-center gap-4">
+            <Logo />
+            <nav class="max-md:hidden">
+                <NavMenu data={MENU} />
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <Search />
+            <ThemeToggle />
+            <MenuToggle />
+        </div>
+    </div>
+
+    <div class="md:hidden">
+        <nav id="menu-col">
+            <NavMenu data={MENU} />
+        </nav>
+    </div>
+</header>
+
+<script>
+import { isMenuOpen } from "@/store";
+
+document.addEventListener('astro:page-load', () => {
+    const menuCol = document.getElementById("menu-col")
+    if (!menuCol) {
+        return
+    }
+
+    isMenuOpen.subscribe((open: any) => {
+        if (open) {
+            menuCol.style.display = 'block'
+        }
+        else {
+            menuCol.style.display = 'none'
+        }
+    })
+})
+</script>

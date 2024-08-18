@@ -1,0 +1,15 @@
+---
+export interface Props {
+  name: string
+  url: string
+  icon?: string
+}
+
+const { name, url } = Astro.props
+---
+
+<li class="max-md:w-full">
+    <a class="flex justify-center items-center h-16 px-4 max-md:h-10 max-md:rounded-full transition max-md:hover:bg-base-hover max-md:hover:color-base-hover"  href={url}>
+        {name}
+    </a>
+</li>

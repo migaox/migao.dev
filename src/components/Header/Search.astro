@@ -1,0 +1,95 @@
+---
+
+---
+
+<button id="search-btn" title="search button">
+    <div class="i-line-md:search"></div>
+</button>
+
+<div class="hidden fixed" id="search-modal">
+    <div 
+        id="modal-backdrop" 
+        class="fixed z-1000 left-0 top-0 backdrop-blur-sm h-screen w-screen overflow-hidden">
+
+    </div>
+
+    <div class="fixed left-1/2 top-32 -translate-x-1/2 z-1001 w-[500px] max-md:w-330px rounded shadow-xl
+                 bg-[#eaecf1] dark:bg-[#202229] border-1 border-base">
+        <div id="search-box" class="p-4 flex flex-row justify-center items-center">
+            <div class="bg-base color-base p-10px rounded-l">
+                <div class="i-carbon:search"></div>
+            </div>
+            <input 
+                id="search-input" 
+                placeholder="Search"
+                autocomplete="off"
+                class="w-full p-2 border-2
+                    outline-none bg-base color-base border-transparent flex-1"
+            />
+            <!-- focus:ring-0 focus:border-blue-500 -->
+            <div class="bg-base color-base px-2 py-12px rounded-r">
+                <div class="bg-[#eaecf1] dark:bg-[#3e4b5e] px-5px py-2px rounded text-xs">ESC</div>
+                <!-- <div class="i-carbon:close"></div> -->
+            </div>
+        </div>
+
+        <div class="min-h-53 max-h-96 p-4 pt-0 overflow-auto space-y-2">
+            <div class="w-full min-h-48 select-none">
+                <div id="search-results" class="flex flex-col gap-3"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script is:inline>
+document.addEventListener('astro:page-load', () => {
+    document.querySelector("#modal-backdrop").addEventListener("click", () => {
+        const search_modal = document.getElementById("search-modal")
+        search_modal.style.display = 'none'
+        document.getElementById("search-input").value = ""
+    })
+
+    document.querySelector("body").addEventListener("keydown", (e) => {
+        if (e.key == "Escape") {
+            const search_modal = document.getElementById("search-modal")
+            search_modal.style.display = 'none'
+            document.getElementById("search-input").value = ""
+        }
+    })
+
+    document.querySelector("#search-btn").addEventListener("click", () => {
+        const search_modal = document.getElementById("search-modal")
+        console.log(search_modal.style.display)
+        if (!search_modal.style.display || search_modal.style.display == "none") {
+            search_modal.style.display = 'block'
+            document.getElementById("search-input").focus()
+        }
+        else {
+            search_modal.style.display = 'none'
+        }
+    })
+
+    document.querySelector("#search-input").addEventListener('input', async (e) => {
+        if (e.target.dataset.loaded !== 'true') {
+            e.target.dataset.loaded = 'true'
+            window.pagefind = await import("/pagefind/pagefind.js")
+        }
+
+        const search = await window.pagefind.search(e.target.value)
+        
+        document.querySelector("#search-results").innerHTML = ''
+
+        for (const result of search.results) {
+            const data = await result.data()
+            document.querySelector("#search-results").innerHTML += `
+                <a href="${data.url}" class="hover:bg-base-hover hover:color-base-hover">
+                    <h3 class="text-lg mb-2">
+                        <div class="i-ri:pages-line mr-2"></div>${data.meta.title}
+                    </h3>
+                    <p class="text-sm pl-2">${data.excerpt}</p>
+                </a> 
+            `
+        }
+    })
+})
+</script>

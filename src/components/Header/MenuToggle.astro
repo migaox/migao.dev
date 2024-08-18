@@ -1,0 +1,41 @@
+---
+
+---
+
+<button id="menuToggle" title="menu toggle" class="md:hidden max-md:visible">
+    <div class="i-line-md:menu" id="openMenu"></div>
+    <div class="i-line-md:close hidden" id="closeMenu"></div>
+</button>
+
+<script>
+import { isMenuOpen } from '@/store.js';
+
+document.addEventListener('astro:page-load', () => {
+    const handleToggleClick = () => {
+        isMenuOpen.set(!isMenuOpen.get())
+    }
+
+    const toggleButton = document.getElementById("menuToggle")
+    if (toggleButton) {
+      toggleButton.addEventListener("click", handleToggleClick);
+    }
+    
+    isMenuOpen.subscribe((open: any) => {
+        const open_icon = document.getElementById("openMenu");
+        const close_icon = document.getElementById('closeMenu');
+        if (!open_icon || !close_icon) {
+            return
+        }
+
+        if (open) {
+            open_icon.style.display = 'none'
+            close_icon.style.display = 'block'
+        }
+        else {
+            open_icon.style.display = 'block'
+            close_icon.style.display = 'none'
+        }
+    })
+})
+</script>
+

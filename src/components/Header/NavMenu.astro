@@ -1,0 +1,20 @@
+
+---
+import NavLink, {
+  type Props as NavLinkProps,
+} from '@components/Header/NavLink.astro'
+
+interface Props {
+  data: NavLinkProps[]
+}
+
+const { data } = Astro.props
+---
+
+<nav>
+    <ul class="flex items-center max-md:flex-col">
+        {data.map((item) => (
+            <NavLink {...item} />
+        ))}
+    </ul>
+</nav>

@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from 'astro:content'
+
+interface Props {
+  post: CollectionEntry<'posts'>
+}
+
+const { post } = Astro.props
+---
+
+<article class="flex justify-between px-2 py-4 mb-6 rounded-md">
+    <div class="flex flex-col">
+        <a href={`/posts/${post.slug}`}>
+            <h2 class="text-sl sm:text-2xl font-600 leading-tight mb-1 font-sans">{post.data.title}</h2>
+        </a>
+        { post.data.summary && <p class="text-lg">{ post.data.summary }</p> }
+    </div>
+</article>
